@@ -36,6 +36,22 @@
  
 ## 近期更新
 1. 获取无水印图片
+2. **新增自动答题系统** - 支持屏幕截图、OCR识别、AI答题、自动点击
+
+## 功能模块
+
+### 1. 豆包API代理服务
+轻量级豆包API代理，提供聊天和文件上传功能。
+
+### 2. 自动答题系统 ⭐ NEW
+基于豆包AI的自动答题系统，支持：
+- 屏幕区域选择和截图
+- OCR文字识别
+- AI智能答题
+- 自动点击作答
+- 智能停止机制
+
+详细使用说明请查看：[自动答题系统文档](README_AUTO_ANSWER.md)
 
 ## TODO
 
@@ -61,23 +77,29 @@
 1. Python 3.8+
 2. pip 或 uv 包管理工具
 3. 豆包平台账号（用于获取API访问凭证）
+4. **Tesseract-OCR**（用于自动答题系统的OCR识别）
 
 ### 安装步骤
 
-1. 克隆代码库
+#### 1. 克隆代码库
 ```sh
 git clone https://github.com/XilyFeAAAA/DoubaoFreeApi.git
 cd DoubaoFreeApi
 ```
 
-2. 安装虚拟环境以及依赖
+#### 2. 安装虚拟环境以及依赖
 ```sh
 uv init
 uv venv venv
 uv pip install -r requirements.txt
 ```
 
-3. 配置环境变量
+或使用pip：
+```sh
+pip install -r requirements.txt
+```
+
+#### 3. 配置环境变量
 ```sh
 # 复制示例环境变量文件
 cp example.session.json session.json
@@ -86,12 +108,30 @@ cp example.session.json session.json
 > session.json文件存储着全部登录Session，新对话会随机挑选一个Session。
 > 游客Session可以在`app.py`中指定生成数量。
 
-1. 启动服务
+#### 4. 启动服务
 ```sh
 uv run app.py
 ```
 
+或使用python：
+```sh
+python app.py
+```
+
 服务默认运行在 `http://localhost:8000`，API文档可访问 `http://localhost:8000/docs`
+
+### 使用自动答题系统
+
+#### 1. 启动自动答题系统
+```sh
+python auto_answer_main.py
+```
+
+或双击 `启动自动答题.bat`（Windows）
+
+**注意：** 系统使用图片识别模式，直接发送截图给豆包AI识别，无需安装OCR软件！
+
+详细使用说明请查看：[自动答题系统文档](README_AUTO_ANSWER.md) 或 [快速开始](快速开始.md)
 
 ## 项目结构
 

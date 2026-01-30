@@ -31,7 +31,7 @@ async def chat_completion(
         f"device_id={session.device_id}",
         "device_platform=web",
         "language=zh",
-        "pc_version=2.23.2",
+        "pc_version=3.3.5",  # 更新到最新版本
         "pkg_type=release_version",
         "real_aid=497858",
         "region=CN",
@@ -83,12 +83,14 @@ async def chat_completion(
         'cookie': session.cookie,
         'origin': "https://www.doubao.com",
         'referer': f"https://www.doubao.com/chat/{session.room_id}",
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
         "x-flow-trace": session.x_flow_trace
     }
     try:
-        async with aiohttp.ClientSession() as aio_session:
-            async with aio_session.post(url=url, headers=headers, json=body) as response:
+        # 禁用代理，直连豆包服务器
+        connector = aiohttp.TCPConnector(force_close=True)
+        async with aiohttp.ClientSession(connector=connector) as aio_session:
+            async with aio_session.post(url=url, headers=headers, json=body, proxy=None) as response:
                 if response.status != 200:
                     error_text = await response.text()
                     raise Exception(f"豆包API对话补全失败: {response.status}, 详情: {error_text}")
@@ -153,6 +155,12 @@ async def handle_sse(response: aiohttp.ClientResponse):
                         text = json.loads(msg.get('content', '{}')).get('text', )
                         if text:
                             texts.append(text)
+                    elif content_type == 2030:
+                        # 新的消息类型（包含图片识别结果）
+                        content = json.loads(msg.get('content', '{}'))
+                        text = content.get('text', '')
+                        if text:
+                            texts.append(text)
                     elif content_type == 2074:
                         # 图片消息
                         creations = json.loads(msg.get('content', '{}')).get('creations', [])
@@ -180,6 +188,12 @@ async def handle_sse(response: aiohttp.ClientResponse):
                     text = text.lstrip('\n').rstrip("\n")
                     logger.debug(f"SSE流结束: 获取到文本长度={len(text)}, 图片数量={len(image_urls)}")
                     return text, image_urls, conversation_id, message_id, section_id
+                elif event_type == 2005:
+                    # 错误事件
+                    error_code = event_data.get("code")
+                    error_message = event_data.get("message", "未知错误")
+                    logger.error(f"豆包API返回错误: code={error_code}, message={error_message}")
+                    raise Exception(f"豆包API错误 [{error_code}]: {error_message}")
                 else:
                     logger.warning(f"未知的流类型 {event_type}")
             except Exception as e:

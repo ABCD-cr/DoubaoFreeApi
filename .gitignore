@@ -2,6 +2,9 @@
 # 包含你的登录凭证，绝对不能提交！
 session.json
 
+# 用户配置文件（包含个人坐标等信息）
+auto_answer_config.json
+
 # ===== Python =====
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -65,7 +68,7 @@ venv.bak/
 
 # Logs
 *.log
-logs/
+logs/*.log
 
 # Environment variables
 .env
@@ -80,6 +83,10 @@ logs/
 
 # 历史记录文件夹（如果不需要版本控制）
 .history/
+
+# 测试脚本（调试用，不需要提交）
+test_*.py
+debug_*.md
 
 # 配置说明文档（如果包含敏感信息示例）
 如何配置Session.md
