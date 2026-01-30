@@ -1,11 +1,12 @@
+from typing import Optional, List, Dict
 from pydantic import BaseModel
 
 class CompletionRequest(BaseModel):
     prompt: str
     guest: bool
-    attachments: list[dict] = []
-    conversation_id: str | None = None
-    section_id: str | None = None
+    attachments: List[dict] = []
+    conversation_id: Optional[str] = None
+    section_id: Optional[str] = None
     use_deep_think: bool = False
     use_auto_cot: bool = False
 
@@ -17,9 +18,9 @@ class AttachmentRequest(BaseModel):
     file_review_state: int
     file_parse_state: int
     identifier: str
-    option: dict | None = None
-    md5: str | None = None
-    size: int | None = None
+    option: Optional[dict] = None
+    md5: Optional[str] = None
+    size: Optional[int] = None
 
 
 class UploadRequest(BaseModel):

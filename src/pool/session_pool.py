@@ -1,6 +1,7 @@
 import os
 import json
 import random
+from typing import Optional, List, Dict
 from pydantic import BaseModel
 from loguru import logger
 from .fetcher import DoubaoAutomator
@@ -26,7 +27,7 @@ class DoubaoSession(BaseModel):
         }
     
     @classmethod
-    def from_dict(cls, data: dict[str, str]) -> 'DoubaoSession':
+    def from_dict(cls, data: Dict[str, str]) -> 'DoubaoSession':
         return cls(**data)
 
 
@@ -34,9 +35,9 @@ class SessionPool:
     """豆包API会话池，管理多个账号配置"""
     def __init__(self, config_file: str = "session.json"):
         # conversation_id -> DoubaoSession
-        self.session_map: dict[str, DoubaoSession] = {}
-        self.auth_sessions: list[DoubaoSession] = []
-        self.guest_sessions: list[DoubaoSession] = [] 
+        self.session_map: Dict[str, DoubaoSession] = {}
+        self.auth_sessions: List[DoubaoSession] = []
+        self.guest_sessions: List[DoubaoSession] = [] 
         self.config_file = config_file
         self.load_from_file()
     
@@ -64,7 +65,7 @@ class SessionPool:
         else:
             self.auth_sessions.append(session)
     
-    def get_session(self, conversation_id: str | None = None, guest: bool = False) -> DoubaoSession:
+    def get_session(self, conversation_id: Optional[str] = None, guest: bool = False) -> DoubaoSession:
         """获取会话配置，如果不存在则随机"""
         if conversation_id is None:
             if guest:

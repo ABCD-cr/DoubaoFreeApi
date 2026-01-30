@@ -34,8 +34,9 @@ async def index(request: Request):
 
 @app.on_event("startup")
 async def startup():
-    await session_pool.fetch_guest_session(0)
-    print("成功获取游客Session")
+    # 暂时跳过自动获取游客Session，避免网络超时
+    # await session_pool.fetch_guest_session(1)
+    print("服务启动成功，请配置 session.json 文件以使用登录模式")
 
 app.include_router(router, prefix="/api")
 

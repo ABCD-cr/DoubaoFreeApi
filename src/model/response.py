@@ -1,10 +1,11 @@
+from typing import Optional, List
 from pydantic import BaseModel
 import uuid
 
 
 class CompletionResponse(BaseModel):
     text: str
-    img_urls: list[str]
+    img_urls: List[str]
     conversation_id: str
     messageg_id: str
     section_id: str
@@ -17,9 +18,9 @@ class UploadResponse(BaseModel):
     file_review_state: int
     file_parse_state: int
     identifier: str
-    option: dict | None = None
-    md5: str | None = None
-    size: int | None = None
+    option: Optional[dict] = None
+    md5: Optional[str] = None
+    size: Optional[int] = None
     
 
 class ImageResponse(BaseModel):

@@ -1,3 +1,4 @@
+from typing import Optional, List, Dict
 from src.pool.session_pool import session_pool
 from requests_aws4auth import AWS4Auth
 from fastapi import HTTPException
@@ -15,7 +16,7 @@ async def chat_completion(
     guest: bool,
     section_id: str = None, 
     conversation_id: str = None, 
-    attachments: list[dict] = [], 
+    attachments: List[dict] = [], 
     use_auto_cot: bool = False, 
     use_deep_think: bool = False
 ):
